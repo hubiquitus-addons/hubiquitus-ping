@@ -1,0 +1,13 @@
+{
+  "name": "hubiquitus-ping",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hubiquitus-addons/hubiquitus-ping"
+  },
+  "dependencies": {
+    "hubiquitus-core": "0.8.*",
+    "lodash": "2.*"
+  },
+  "main": "./index.js"
+}
