@@ -13,14 +13,14 @@ module.exports = function (name, addr) {
     if (this.started) return;
     this.started = true;
 
+    var endpoint = url.resolve(addr, '/ping/' + name);
     (function tick() {
       logger.trace('ping...');
-      var req = http.request(url.resolve(addr, '/ping/' + name));
-      req.on('error', function (err) {
+      http.get(endpoint, function (res) {
+        setTimeout(tick, 500);
+      }).on('error', function (err) {
         logger.warn('ping failed', err);
       });
-      req.end();
-      setTimeout(tick, 5000);
     })();
   }, {name: name, addr: addr});
 
