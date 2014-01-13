@@ -9,5 +9,8 @@
     "hubiquitus-core": "0.8.*",
     "lodash": "2.*"
   },
+  "devDependencies": {
+    "commander": "2.1.*"
+  },
   "main": "./index.js"
 }
