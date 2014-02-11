@@ -1,7 +1,6 @@
-# hubiquitus-ping
+# Hubiquitus-ping
 
-Hubiquitus ping is a simple module to ping a monitoring server.
-A complementary module, **hubiquitus-ping-monitor** can handle pings from multiple containers and process them.
+**Hubiquitus-ping** is a simple module to ping a monitoring server, designed to used along with [**hubiquitus-ping-monitor**](https://github.com/hubiquitus-addons/hubiquitus-ping-monitor), a complementary module that can handle pings from multiple containers and process them.
 
 Install the module with :
 
@@ -14,4 +13,5 @@ var hubiquitus = require('hubiquitus-core');
 require('hubiquitus-ping')('container_name', 'http://monitor:port');
 ```
 
-This gives a name to the container and ping the specified address every 30s.
+This gives a name to the container and pings the specified address every 30 seconds.
+See the hubiquitus-ping-monitor documentation [here](https://github.co
