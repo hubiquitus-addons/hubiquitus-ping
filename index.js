@@ -4,7 +4,9 @@ var _ = require('lodash');
 var http = require('http');
 var url = require('url');
 
-module.exports = function (name, addr) {
+module.exports = function (addr, name) {
+  name = name || hubiquitus.properties.name;
+
   if (!_.isString(name)) throw new TypeError('Name must be a string');
   if (!_.isString(addr)) throw new TypeError('Addr must be an http URL');
 
