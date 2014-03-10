@@ -10,8 +10,9 @@ To use it :
 
 ```js
 var hubiquitus = require('hubiquitus-core');
-require('hubiquitus-ping')('container_name', 'http://monitor:port');
+hubiquitus.set('name', 'sample');
+require('hubiquitus-ping')('http://monitor:port');
 ```
 
 This gives a name to the container and pings the specified address every 30 seconds.
-See the hubiquitus-ping-monitor documentation [here](https://github.co
+See the hubiquitus-ping-monitor documentation [here](https://github.com/hubiquitus-addons/hubiquitus-ping-monitor).
