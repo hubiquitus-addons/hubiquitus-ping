@@ -11,35 +11,31 @@ module.exports = function (addr, name) {
   if (!_.isString(addr)) throw new TypeError('Addr must be an http URL');
 
   logger.info('ping configured with name: ' + name + '; addr: ' + addr);
-  hubiquitus.addActor('hping', function () {
-    if (this.started) return logger.warn('already emitting...');
-    this.started = true;
 
-    var endpoint = url.resolve(addr, '/ping/' + hubiquitus.properties.ID + '/' + name);
+  if (this.started) return logger.warn('already emitting...');
+  this.started = true;
 
-    var tick = (function tick() {
-      logger.trace('ping [' + endpoint + ']...');
-      http.get(endpoint, onRes)
-        .on('socket', onSock)
-        .on('error', onErr);
-      return tick;
-    })();
+  var endpoint = url.resolve(addr, '/ping/' + hubiquitus.properties.ID + '/' + name);
 
-    function onRes(res) {
-      logger.trace('ping ack : ' + res.statusCode + ' !');
-      setTimeout(tick, 30000);
-    }
+  var tick = (function tick() {
+    logger.trace('ping [' + endpoint + ']...');
+    http.get(endpoint, onRes)
+      .on('socket', onSock)
+      .on('error', onErr);
+    return tick;
+  })();
 
-    function onSock(sock) {
-      sock.emit('agentRemove');
-    }
+  function onRes(res) {
+    logger.trace('ping ack : ' + res.statusCode + ' !');
+    setTimeout(tick, 30000);
+  }
 
-    function onErr(err) {
-      logger.warn('ping failed', err);
-      setTimeout(tick, 30000);
-    }
+  function onSock(sock) {
+    sock.emit('agentRemove');
+  }
 
-  }, {name: name, addr: addr});
-
-  hubiquitus.send('hping-master', 'hping');
+  function onErr(err) {
+    logger.debug('ping failed', err);
+    setTimeout(tick, 30000);
+  }
 };
