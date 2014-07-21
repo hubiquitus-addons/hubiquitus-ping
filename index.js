@@ -1,8 +1,15 @@
 var hubiquitus = require('hubiquitus-core');
 var logger = hubiquitus.logger('hubiquitus:addons:ping');
 var _ = require('lodash');
-var http = require('http');
+var request = require('request');
 var url = require('url');
+
+var failsafe;
+try {
+  failsafe = require('hubiquitus-failsafe');
+} catch (err) {
+  logger.debug('Working without failsafe addon');
+}
 
 module.exports = function (addr, name) {
   name = name || hubiquitus.properties.name;
@@ -19,23 +26,19 @@ module.exports = function (addr, name) {
 
   var tick = (function tick() {
     logger.trace('ping [' + endpoint + ']...');
-    http.get(endpoint, onRes)
-      .on('socket', onSock)
-      .on('error', onErr);
+    var payload = {};
+    if (failsafe) payload.failsafe = failsafe.stats();
+
+    request.post(endpoint, payload, onRes);
     return tick;
   })();
 
-  function onRes(res) {
-    logger.trace('ping ack : ' + res.statusCode + ' !');
-    setTimeout(tick, 30000);
-  }
-
-  function onSock(sock) {
-    sock.emit('agentRemove');
-  }
-
-  function onErr(err) {
-    logger.debug('ping failed', err);
+  function onRes(err, response) {
+    if (err) {
+      logger.debug('ping failed', err);
+    } else {
+      logger.trace('ping ack : ' + response.statusCode + ' !');
+    }
     setTimeout(tick, 30000);
   }
 };
