@@ -12,7 +12,7 @@ try {
 }
 
 module.exports = function (addr, name) {
-  name = name || hubiquitus.properties.name;
+  name = name || hubiquitus.properties.container.name;
 
   if (!_.isString(name)) throw new TypeError('Name must be a string');
   if (!_.isString(addr)) throw new TypeError('Addr must be an http URL');
@@ -22,12 +22,12 @@ module.exports = function (addr, name) {
   if (this.started) return logger.warn('already emitting...');
   this.started = true;
 
-  var endpoint = url.resolve(addr, '/ping/' + hubiquitus.properties.ID + '/' + name);
+  var endpoint = url.resolve(addr, '/ping/' + hubiquitus.properties.container.id + '/' + name);
 
   var tick = (function tick() {
     logger.trace('ping [' + endpoint + ']...');
-    var payload = {};
-    if (failsafe) payload.failsafe = failsafe.stats();
+    var payload = {form:{}};
+    if (failsafe) payload.form.failsafe = failsafe.stats();
 
     request.post(endpoint, payload, onRes);
     return tick;
